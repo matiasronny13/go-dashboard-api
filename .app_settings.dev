@@ -1,0 +1,9 @@
+{
+    "log": {
+        "fileNameFormat": "logs/%s_dashboard-api.log"
+    },
+    "api": {
+        "host": "localhost",
+        "port": "8888"
+    }
+}

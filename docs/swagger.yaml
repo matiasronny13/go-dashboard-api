@@ -1,0 +1,27 @@
+definitions:
+  entity.Notes:
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /notes:
+    get:
+      consumes:
+      - application/json
+      description: Get all notes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Notes'
+      summary: Get all notes
+      tags:
+      - notes
+swagger: "2.0"
