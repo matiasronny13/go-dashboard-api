@@ -3,7 +3,7 @@
         "fileNameFormat": "logs/%s_dashboard-api.log"
     },
     "api": {
-        "host": "localhost",
-        "port": "8888"
+        "host": "localhost:8888",
+        "basePath": "/api/v1"
     }
 }

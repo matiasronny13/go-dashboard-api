@@ -93,7 +93,7 @@ func main() {
 
 	slog.Info("Routers initialized")
 
-	router.Run(fmt.Sprintf("%s:%s", appSettings.Api.Host, appSettings.Api.Port))
+	router.Run(appSettings.Api.Host)
 
 	slog.Info("App terminated")
 }

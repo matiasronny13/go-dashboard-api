@@ -25,14 +25,148 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "notes"
+                    "Notes"
                 ],
                 "summary": "Get all notes",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entity.Notes"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Notes"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create notes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notes"
+                ],
+                "summary": "Create notes",
+                "parameters": [
+                    {
+                        "description": "New Notes",
+                        "name": "notes",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Notes"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Notes"
+                        }
+                    }
+                }
+            }
+        },
+        "/notes/{id}": {
+            "get": {
+                "description": "Get notes by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notes"
+                ],
+                "summary": "Get notes by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Notes"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete notes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notes"
+                ],
+                "summary": "Delete notes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update notes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Notes"
+                ],
+                "summary": "Update notes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Existing Notes",
+                        "name": "notes",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Notes"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Notes"
                         }
                     }
                 }
@@ -40,11 +174,15 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "entity.Notes": {
+        "model.Notes": {
             "type": "object",
             "properties": {
+                "content": {
+                    "type": "string"
+                },
                 "id": {
-                    "type": "integer"
+                    "type": "string",
+                    "format": "uuid"
                 },
                 "title": {
                     "type": "string"

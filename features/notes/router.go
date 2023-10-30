@@ -11,10 +11,9 @@ func NotesRouter(api *gin.RouterGroup, setting *model.AppSettings, dbClient *gor
 	notesGroup := api.Group("/notes")
 	{
 		notesGroup.GET("", notesHandler.GetNotes)
-		// notesGroup.GET(":id", c.ShowAccount)
-		// notesGroup.POST("", c.AddAccount)
-		// notesGroup.POST(":id/images", c.UploadAccountImage)
-		// notesGroup.DELETE(":id", c.DeleteAccount)
-		// notesGroup.PATCH(":id", c.UpdateAccount)
+		notesGroup.GET(":id", notesHandler.GetNotesById)
+		notesGroup.POST("", notesHandler.CreateNotes)
+		notesGroup.PATCH(":id", notesHandler.UpdateNotes)
+		notesGroup.DELETE(":id", notesHandler.DeleteNotes)
 	}
 }
