@@ -75,7 +75,7 @@ func (hdl *handler) GetNotesById(c *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param notes body model.Notes true "New Notes"
-// @Success 200 {object} model.Notes
+// @Success 201 {object} model.Notes
 // @Router /notes [post]
 func (hdl *handler) CreateNotes(c *gin.Context) {
 	var notes model.Notes
@@ -99,7 +99,7 @@ func (hdl *handler) CreateNotes(c *gin.Context) {
 // @Tags Notes
 // @Accept application/json
 // @Produce application/json
-// @Param id path string true "Id"
+// @Param id path string true "Id" format(uuid)
 // @Param notes body model.Notes true "Existing Notes"
 // @Success 200 {object} model.Notes
 // @Router /notes/{id} [patch]
@@ -132,7 +132,7 @@ func (hdl *handler) UpdateNotes(c *gin.Context) {
 // @Tags Notes
 // @Accept application/json
 // @Produce application/json
-// @Param id path string true "Id"
+// @Param id path string true "Id" format(uuid)
 // @Success 200 {object} nil
 // @Router /notes/{id} [delete]
 func (hdl *handler) DeleteNotes(c *gin.Context) {

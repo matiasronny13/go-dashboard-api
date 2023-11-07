@@ -5,8 +5,9 @@ type LogSettings struct {
 }
 
 type ApiSettings struct {
-	Host     string
-	BasePath string
+	Host          string
+	BasePath      string
+	FaviconFolder string
 }
 
 type AppSettings struct {

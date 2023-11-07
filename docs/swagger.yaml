@@ -1,4 +1,27 @@
 definitions:
+  model.Bookmark:
+    properties:
+      groupId:
+        type: integer
+      icon:
+        type: string
+      id:
+        format: uuid
+        type: string
+      name:
+        type: string
+      url:
+        type: string
+    type: object
+  model.Favicon:
+    properties:
+      downloadUrl:
+        type: string
+      fileName:
+        type: string
+      imageUrl:
+        type: string
+    type: object
   model.Notes:
     properties:
       content:
@@ -12,6 +35,113 @@ definitions:
 info:
   contact: {}
 paths:
+  /bookmark:
+    get:
+      consumes:
+      - application/json
+      description: Get all bookmarks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Bookmark'
+            type: array
+      summary: Get all bookmarks
+      tags:
+      - Bookmark
+    post:
+      consumes:
+      - application/json
+      description: Create Bookmark
+      parameters:
+      - description: Bookmark info
+        in: body
+        name: info
+        required: true
+        schema:
+          $ref: '#/definitions/model.Bookmark'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Bookmark'
+      summary: Create Bookmark
+      tags:
+      - Bookmark
+  /bookmark/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Bookmark
+      parameters:
+      - description: Id
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Delete Bookmark
+      tags:
+      - Bookmark
+    patch:
+      consumes:
+      - application/json
+      description: Update Bookmark
+      parameters:
+      - description: Id
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Bookmark info
+        in: body
+        name: info
+        required: true
+        schema:
+          $ref: '#/definitions/model.Bookmark'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Bookmark'
+      summary: Update Bookmark
+      tags:
+      - Bookmark
+  /bookmark/favicon:
+    post:
+      consumes:
+      - application/json
+      description: Download favicon to server folder
+      parameters:
+      - description: Favicon info
+        in: body
+        name: info
+        required: true
+        schema:
+          $ref: '#/definitions/model.Favicon'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Favicon'
+      summary: Download favicon to server folder
+      tags:
+      - Bookmark
   /notes:
     get:
       consumes:
@@ -43,8 +173,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/model.Notes'
       summary: Create notes
@@ -57,6 +187,7 @@ paths:
       description: Delete notes
       parameters:
       - description: Id
+        format: uuid
         in: path
         name: id
         required: true
@@ -96,6 +227,7 @@ paths:
       description: Update notes
       parameters:
       - description: Id
+        format: uuid
         in: path
         name: id
         required: true
