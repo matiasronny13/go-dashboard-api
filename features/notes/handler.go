@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ghostrepo00/go-dashboard-api/domain/model"
+	"github.com/ghostrepo00/go-dashboard-api/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -30,8 +31,7 @@ type NotesHandler interface {
 // @Success      200  {array}  model.Notes
 // @Router       /notes [get]
 func (hdl *handler) GetNotes(c *gin.Context) {
-	result, err := hdl.service.GetNotes()
-	if err != nil {
+	if result, err := hdl.service.GetNotes(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
 		c.JSON(http.StatusOK, result)
@@ -54,17 +54,14 @@ func (hdl *handler) GetNotesById(c *gin.Context) {
 		param  uuid.UUID
 	)
 
-	param, err = uuid.Parse(c.Param("id"))
-	if err == nil {
-		result, err = hdl.service.GetNotesById(param)
-		if err == nil {
+	if param, err = uuid.Parse(c.Param("id")); err == nil {
+		if result, err = hdl.service.GetNotesById(param); err == nil {
 			c.JSON(http.StatusOK, result)
-			return
 		}
 	}
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(util.MapHttpError(err), gin.H{"error": err.Error()})
 	}
 }
 
@@ -78,19 +75,20 @@ func (hdl *handler) GetNotesById(c *gin.Context) {
 // @Success 201 {object} model.Notes
 // @Router /notes [post]
 func (hdl *handler) CreateNotes(c *gin.Context) {
-	var notes model.Notes
-	err := c.BindJSON(&notes)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	err = hdl.service.CreateNotes(&notes)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	var (
+		notes model.Notes
+		err   error
+	)
+
+	if err = c.BindJSON(&notes); err == nil {
+		if err = hdl.service.CreateNotes(&notes); err == nil {
+			c.JSON(http.StatusCreated, notes)
+		}
 	}
 
-	c.JSON(http.StatusCreated, notes)
+	if err != nil {
+		c.JSON(util.MapHttpError(err), gin.H{"error": err.Error()})
+	}
 }
 
 // UpdateNotes godoc
@@ -104,26 +102,25 @@ func (hdl *handler) CreateNotes(c *gin.Context) {
 // @Success 200 {object} model.Notes
 // @Router /notes/{id} [patch]
 func (hdl *handler) UpdateNotes(c *gin.Context) {
+	var (
+		id  uuid.UUID
+		err error
+		mdl model.Notes
+	)
+
 	param := c.Param("id")
-	id, err := uuid.Parse(param)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	var notes model.Notes
-	err = c.BindJSON(&notes)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	notes.Id = &id
-	err = hdl.service.UpdateNotes(&notes)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	if id, err = uuid.Parse(param); err == nil {
+		if err = c.BindJSON(&mdl); err == nil {
+			mdl.Id = &id
+			if err = hdl.service.UpdateNotes(&mdl); err == nil {
+				c.JSON(http.StatusOK, mdl)
+			}
+		}
 	}
 
-	c.JSON(http.StatusOK, notes)
+	if err != nil {
+		c.JSON(util.MapHttpError(err), gin.H{"error": err.Error()})
+	}
 }
 
 // DeleteNotes godoc
@@ -136,17 +133,19 @@ func (hdl *handler) UpdateNotes(c *gin.Context) {
 // @Success 200 {object} nil
 // @Router /notes/{id} [delete]
 func (hdl *handler) DeleteNotes(c *gin.Context) {
+	var (
+		err error
+		id  uuid.UUID
+	)
+
 	param := c.Param("id")
-	id, err := uuid.Parse(param)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	err = hdl.service.DeleteNotes(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+	if id, err = uuid.Parse(param); err == nil {
+		if err = hdl.service.DeleteNotes(id); err == nil {
+			c.JSON(http.StatusOK, nil)
+		}
 	}
 
-	c.JSON(http.StatusOK, nil)
+	if err != nil {
+		c.JSON(util.MapHttpError(err), gin.H{"error": err.Error()})
+	}
 }

@@ -1,11 +1,12 @@
 package bookmark
 
 import (
+	"errors"
 	"io"
-	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/ghostrepo00/go-dashboard-api/domain/model"
 	"github.com/google/uuid"
@@ -25,29 +26,24 @@ type BookmarkService interface {
 }
 
 func (svc *service) DownloadFavicon(info *model.Favicon) (err error) {
-	res, err := http.Get(info.DownloadUrl)
-	if err != nil {
-		slog.Error("error making http request: %s\n", err)
-		return err
-	}
-	defer res.Body.Close()
+	var resp *http.Response
 
-	file, err := os.Create(filepath.Join(svc.appSettings.Api.FaviconFolder, info.FileName))
-	if err != nil {
-		slog.Error("Failed to create the file:", err)
-		return err
-	}
-	defer file.Close()
+	if resp, err = http.Get(info.DownloadUrl); err == nil {
+		defer resp.Body.Close()
+		if strings.HasPrefix(strings.ToLower(resp.Header.Get("Content-Type")), "image/") {
+			if file, err := os.Create(filepath.Join(svc.appSettings.Api.FaviconFolder, info.FileName)); err == nil {
+				defer file.Close()
 
-	// Copy the image data from the HTTP response to the local file
-	_, err = io.Copy(file, res.Body)
-	if err != nil {
-		slog.Error("Failed to save the image to the file:", err)
-		return err
+				// Copy the image data from the HTTP response to the local file
+				if _, err = io.Copy(file, resp.Body); err == nil {
+					info.ImageUrl = "/logs/" + info.FileName
+				}
+			}
+		} else {
+			return errors.New("file type is not image")
+		}
 	}
-
-	info.ImageUrl = "/logs/" + info.FileName
-	return nil
+	return
 }
 
 func (svc *service) GetBookmarks() (result []model.Bookmark, err error) {

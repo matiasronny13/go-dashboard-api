@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ghostrepo00/go-dashboard-api/domain/model"
-	"github.com/ghostrepo00/go-dashboard-api/domain/model/exception"
+	"github.com/ghostrepo00/go-dashboard-api/util"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -35,11 +35,9 @@ func (hdl *handler) DownloadFavicon(c *gin.Context) {
 	var info model.Favicon
 	if err := c.BindJSON(&info); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
 	} else {
 		if err := hdl.service.DownloadFavicon(&info); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
 		} else {
 			c.JSON(http.StatusCreated, info)
 		}
@@ -83,7 +81,9 @@ func (hdl *handler) CreateBookmark(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err != nil {
+		c.JSON(util.MapHttpError(err), gin.H{"error": err.Error()})
+	}
 }
 
 // UpdateBookmark godoc
@@ -113,12 +113,9 @@ func (hdl *handler) UpdateBookmark(c *gin.Context) {
 		}
 	}
 
-	httpCode := http.StatusInternalServerError
-	if _, ok := err.(*exception.NotFound); ok {
-		httpCode = http.StatusNotFound
+	if err != nil {
+		c.JSON(util.MapHttpError(err), gin.H{"error": err.Error()})
 	}
-
-	c.JSON(httpCode, gin.H{"error": err.Error()})
 }
 
 // DeleteBookmark godoc
@@ -143,5 +140,7 @@ func (hdl *handler) DeleteBookmark(c *gin.Context) {
 		}
 	}
 
-	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err != nil {
+		c.JSON(util.MapHttpError(err), gin.H{"error": err.Error()})
+	}
 }
