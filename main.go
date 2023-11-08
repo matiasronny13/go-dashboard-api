@@ -12,6 +12,7 @@ import (
 	"github.com/ghostrepo00/go-dashboard-api/api"
 	appconstant "github.com/ghostrepo00/go-dashboard-api/domain/app_constant"
 	"github.com/ghostrepo00/go-dashboard-api/domain/model"
+	"github.com/ghostrepo00/go-dashboard-api/html"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
@@ -40,8 +41,9 @@ func SetupApiRouters(appSettings *model.AppSettings, dbClient *gorm.DB) *gin.Eng
 	router := gin.Default()
 	router.Use(cors.Default())
 
-	api.SetupRouters(router, appSettings, dbClient)
-	api.SetupSwagger(router, appSettings)
+	api.SetupSwaggerRouter(router, appSettings)
+	api.SetupApiRouters(router, appSettings, dbClient)
+	html.SetupHtmlRouters(router, appSettings, dbClient)
 
 	return router
 }
