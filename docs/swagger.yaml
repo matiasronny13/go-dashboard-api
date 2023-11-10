@@ -15,11 +15,9 @@ definitions:
     type: object
   model.Favicon:
     properties:
-      downloadUrl:
-        type: string
       fileName:
         type: string
-      imageUrl:
+      url:
         type: string
     type: object
   model.Notes:
@@ -30,6 +28,21 @@ definitions:
         format: uuid
         type: string
       title:
+        type: string
+    type: object
+  model.Webtag:
+    properties:
+      id:
+        type: string
+      note:
+        type: string
+      tags:
+        items:
+          type: integer
+        type: array
+      title:
+        type: string
+      url:
         type: string
     type: object
 info:
@@ -248,4 +261,107 @@ paths:
       summary: Update notes
       tags:
       - Notes
+  /webtag:
+    get:
+      consumes:
+      - application/json
+      description: Get all Webtag
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Webtag'
+            type: array
+      summary: Get all Webtag
+      tags:
+      - Webtag
+    post:
+      consumes:
+      - application/json
+      description: Create Webtag
+      parameters:
+      - description: New Webtag
+        in: body
+        name: Webtag
+        required: true
+        schema:
+          $ref: '#/definitions/model.Webtag'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Webtag'
+      summary: Create Webtag
+      tags:
+      - Webtag
+  /webtag/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Webtag
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Delete Webtag
+      tags:
+      - Webtag
+    get:
+      consumes:
+      - application/json
+      description: Get Webtag by id
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Webtag'
+      summary: Get Webtag by id
+      tags:
+      - Webtag
+    patch:
+      consumes:
+      - application/json
+      description: Update Webtag
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Existing Webtag
+        in: body
+        name: Webtag
+        required: true
+        schema:
+          $ref: '#/definitions/model.Webtag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Webtag'
+      summary: Update Webtag
+      tags:
+      - Webtag
 swagger: "2.0"

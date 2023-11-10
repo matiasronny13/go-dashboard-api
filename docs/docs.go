@@ -335,6 +335,162 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/webtag": {
+            "get": {
+                "description": "Get all Webtag",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Webtag"
+                ],
+                "summary": "Get all Webtag",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/model.Webtag"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create Webtag",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Webtag"
+                ],
+                "summary": "Create Webtag",
+                "parameters": [
+                    {
+                        "description": "New Webtag",
+                        "name": "Webtag",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Webtag"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/model.Webtag"
+                        }
+                    }
+                }
+            }
+        },
+        "/webtag/{id}": {
+            "get": {
+                "description": "Get Webtag by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Webtag"
+                ],
+                "summary": "Get Webtag by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Webtag"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Webtag",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Webtag"
+                ],
+                "summary": "Delete Webtag",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update Webtag",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Webtag"
+                ],
+                "summary": "Update Webtag",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Existing Webtag",
+                        "name": "Webtag",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Webtag"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Webtag"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -362,13 +518,10 @@ const docTemplate = `{
         "model.Favicon": {
             "type": "object",
             "properties": {
-                "downloadUrl": {
-                    "type": "string"
-                },
                 "fileName": {
                     "type": "string"
                 },
-                "imageUrl": {
+                "url": {
                     "type": "string"
                 }
             }
@@ -384,6 +537,29 @@ const docTemplate = `{
                     "format": "uuid"
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.Webtag": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "url": {
                     "type": "string"
                 }
             }

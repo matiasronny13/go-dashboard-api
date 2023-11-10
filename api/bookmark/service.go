@@ -28,16 +28,14 @@ type BookmarkService interface {
 func (svc *service) DownloadFavicon(info *model.Favicon) (err error) {
 	var resp *http.Response
 
-	if resp, err = http.Get(info.DownloadUrl); err == nil {
+	if resp, err = http.Get(info.Url); err == nil {
 		defer resp.Body.Close()
 		if strings.HasPrefix(strings.ToLower(resp.Header.Get("Content-Type")), "image/") {
 			if file, err := os.Create(filepath.Join(svc.appSettings.Api.FaviconFolder, info.FileName)); err == nil {
 				defer file.Close()
 
 				// Copy the image data from the HTTP response to the local file
-				if _, err = io.Copy(file, resp.Body); err == nil {
-					info.ImageUrl = "/logs/" + info.FileName
-				}
+				_, err = io.Copy(file, resp.Body)
 			}
 		} else {
 			return errors.New("file type is not image")
